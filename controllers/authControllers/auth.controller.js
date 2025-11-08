@@ -311,3 +311,4 @@ export const verifyEmail = async (req, res, next) => {
         next(err);
     }
 };
+createAdmin()

@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
 import { Op, where } from "sequelize";
 import bcrypt from "bcryptjs";
-import { createAdmin } from "./admin.controller.js";
 import { Resend } from "resend";
 
 //registration function
@@ -311,4 +310,3 @@ export const verifyEmail = async (req, res, next) => {
         next(err);
     }
 };
-createAdmin()

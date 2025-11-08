@@ -3,6 +3,7 @@ import Notification from "../../models/notification.model.js";
 import Shift from "../../models/shift.model.js";
 import User from "../../models/users.model.js";
 
+//assign shift
 export const createShift = async (req, res, next) => {
   try {
     const { user_id, shifts } = req.body;

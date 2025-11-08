@@ -5,58 +5,39 @@ import crypto from 'crypto'
 import { Op, where } from "sequelize";
 import bcrypt from "bcryptjs";
 import { createAdmin } from "./admin.controller.js";
+import { Resend } from "resend";
 
 //registration function
-export const registerUsers = async (req, res, next) => {
-    const { firstName, lastName, email, password, phoneNumber } = req.body;
-
-    if (!firstName) {
-        const error = new Error('First name is required')
-        error.statusCode = 400
-        return next(error)
-    };
-    if (!lastName) {
-        const error = new Error('Last name is required')
-        error.statusCode = 400
-        return next(error)
-    };
-    if (!email) {
-        const error = new Error('Email is required')
-        error.statusCode = 400
-        return next(error)
-    };
-    if (!password) {
-        const error = new Error('Password is required')
-        error.statusCode = 400
-        return next(error)
-    };
-    if (!phoneNumber) {
-        const error = new Error('Phone number is required')
-        error.statusCode = 400
-        return next(error)
-    };
-
+export const completeRegistration = async (req, res, next) => {
     try {
+        const { token, phoneNumber, password } = req.body;
         const image = req.file ? req.file.path : null;
-        const user = await User.create({ firstName, lastName, email, password, phoneNumber, image });
 
-        const token = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, {
-            expiresIn: '1d'
-        });
+        if (!token) return res.status(400).json({ message: "Token required" });
 
-        res.cookie('token', token, {
-            httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000
-        });
+        if (!password) return res.status(400).json({ message: "Password is required" });
 
-        res.status(201).json({
-            success: true,
-            message: 'User registered successfully',
-            statusCode: 200,
-        });
+        if (!phoneNumber) return res.status(400).json({ message: "Phone number is required" });
 
-    } catch (error) {
-        next(error)
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.user_id;
+
+        const user = await User.findByPk(userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        // Update user info
+        user.phoneNumber = phoneNumber || user.phone;
+        if (image) user.image = image;
+        if (password) user.password = password; // make sure to hash before saving in production
+        user.isVerified = true;
+
+        await user.save();
+
+        res.status(200).json({ message: "Profile completed successfully" });
+
+    } catch (err) {
+        console.log(err);
+        next(err);
     }
 };
 
@@ -77,6 +58,15 @@ export const login = async (req, res, next) => {
 
     try {
         const user = await User.findOne({ where: { email } })
+
+        if (!user) {
+            // User not found
+            return res.status(401).json({ message: "Email or password is wrong" });
+        }
+
+        if (user.role !== "admin" && !user.isVerified) {
+            return res.status(401).json({ message: "Please verify your email first." });
+        }
 
         if (!user) {
             const error = new Error("Email or password is wrong")
@@ -190,7 +180,7 @@ export const resetPassword = async (req, res, next) => {
 //change password
 export const changePassword = async (req, res, next) => {
     try {
-        const {oldPassword, newPassword } = req.body;
+        const { oldPassword, newPassword } = req.body;
 
         if (!oldPassword || !newPassword) {
             const error = new Error("Both passwords are required");
@@ -242,3 +232,82 @@ export const loggedInUserData = async (req, res, next) => {
     }
 }
 
+//invite a worker
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export const inviteWorker = async (req, res, next) => {
+    try {
+        const { email, firstName, lastName, role } = req.body;
+
+        // Check if email already exists
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) {
+            return res.status(400).json({ message: "This email is already registered." });
+        }
+
+        // Create user but unverified and no password yet
+        const user = await User.create({
+            email,
+            firstName,
+            lastName,
+            role,
+            isVerified: false
+        });
+
+        // Create JWT verification token
+        const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET, {
+            expiresIn: "1d",
+        });
+
+        const verifyLink = `${process.env.FRONTEND_URL}/verify?token=${token}`;
+
+        // Send verification email
+        await resend.emails.send({
+            from: "Shift Sheduler <onboarding@resend.dev>",
+            to: email,
+            subject: "Complete Your Account Setup",
+            html: `
+                <p>Hello ${firstName || ""},</p>
+                <p>You have been invited to join the Shift Platform.</p>
+                <p>Click below to verify your email and finish setting up your account:</p>
+                <a href="${verifyLink}" style="color:#7C3AED;">Verify Account</a>
+                <br/><br/>
+                <small>This link expires in an hour time.</small>
+            `,
+        });
+
+        return res.status(200).json({ message: "Invitation email sent " });
+    } catch (error) {
+        console.log(error);
+        next(error)
+    }
+};
+
+//varyfy email
+export const verifyEmail = async (req, res, next) => {
+    try {
+        const { token } = req.query;
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const user = await User.findByPk(decoded.user_id);
+        if (!user) return res.status(400).json({ message: "Invalid user" });
+
+        // Mark user as verified if not already
+        if (!user.isVerified) {
+            user.isVerified = true;
+            await user.save();
+        }
+
+        // include the token in the redirect to send to the frontend
+        return res.json({ redirectUrl: `${process.env.FRONTEND_URL}/complete-registration?token=${token}&email=${user.email}` });
+
+    } catch (err) {
+        if (err.name === "TokenExpiredError") {
+            return res.status(400).json({ message: "Token has expired. Please request a new verification link." });
+        } else if (err.name === "JsonWebTokenError") {
+            return res.status(400).json({ message: "Invalid token." });
+        }
+        next(err);
+    }
+};

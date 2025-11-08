@@ -180,7 +180,6 @@ export const logout = async (req, res, next) => {
     }
 };
 
-
 // Forgot password controller
 export const forgotPassword = async (req, res) => {
     const user = await User.findOne({ where: { email: req.body.email } });
@@ -297,7 +296,6 @@ export const loggedInUserData = async (req, res, next) => {
 
 //invite a worker
 const resend = new Resend(process.env.RESEND_API_KEY);
-
 export const inviteWorker = async (req, res, next) => {
     try {
         const { email, firstName, lastName, role } = req.body;

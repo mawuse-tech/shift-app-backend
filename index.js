@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express'
 import sequelize from './config/db.js'
 import authRoute from './route/authRoute/auth.route.js'

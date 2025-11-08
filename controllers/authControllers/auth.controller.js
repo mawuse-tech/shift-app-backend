@@ -150,18 +150,36 @@ export const login = async (req, res, next) => {
 
 
 //logout
+// export const logout = async (req, res, next) => {
+//     try {
+//         res.clearCookie('token');
+
+//         res.status(200).json({
+//             success: true,
+//             message: 'user loged out successfully'
+//         })
+//     } catch (error) {
+//         next(error)
+//     }
+// };
 export const logout = async (req, res, next) => {
     try {
-        res.clearCookie('token');
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'none',
+            path: '/' // default path, make sure it matches your cookie path
+        });
 
         res.status(200).json({
             success: true,
-            message: 'user loged out successfully'
-        })
+            message: 'User logged out successfully'
+        });
     } catch (error) {
-        next(error)
+        next(error);
     }
 };
+
 
 // Forgot password controller
 export const forgotPassword = async (req, res) => {

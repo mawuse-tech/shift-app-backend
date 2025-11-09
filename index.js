@@ -23,7 +23,7 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
 app.use(cookieParser());
 
 const allowedOrigins = [
-  'http://localhost:5173',          // local dev
+  // 'http://localhost:5173',          // local dev
   'https://shift-sch.netlify.app'   // production frontend
 ];
 

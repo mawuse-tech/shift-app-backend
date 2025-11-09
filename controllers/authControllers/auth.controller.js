@@ -320,7 +320,8 @@ export const inviteWorker = async (req, res, next) => {
             expiresIn: "1d",
         });
 
-       const verifyLink = new URL(`/verify?token=${token}`, process.env.FRONTEND_URL).toString();;
+        // const verifyLink = `${process.env.FRONTEND_URL}/verify?token=${token}`;
+        const verifyLink = new URL(`/verify?token=${token}`, process.env.FRONTEND_URL).toString();
 
         // Send verification email
         await resend.emails.send({
@@ -361,7 +362,12 @@ export const verifyEmail = async (req, res, next) => {
         }
 
         // include the token in the redirect to send to the frontend
-        return res.json({ redirectUrl: `${process.env.FRONTEND_URL}/complete-registration?token=${token}&email=${user.email}` });
+        const redirectUrl = new URL(
+            `/complete-registration?token=${token}&email=${user.email}`,
+            process.env.FRONTEND_URL
+        ).toString();
+
+        return res.json({ redirectUrl });
 
     } catch (err) {
         if (err.name === "TokenExpiredError") {

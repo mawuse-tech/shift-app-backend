@@ -130,10 +130,11 @@ export const login = async (req, res, next) => {
 
         // send cookie with proper cross-site options
         res.cookie('token', token, {
-            httpOnly: true,                             // not accessible by JS
+            httpOnly: true,
             maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-            secure: process.env.NODE_ENV === 'production', // only HTTPS in production
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'                            // allow cross-site cookies
+            secure: true, // force HTTPS (Render + Netlify)
+            sameSite: 'none', // cross-site required
+            path: '/' // ensure cookie applies to all routes 
         });
 
         return res.status(200).json({
@@ -147,7 +148,6 @@ export const login = async (req, res, next) => {
         next(error);
     }
 };
-
 
 //logout
 // export const logout = async (req, res, next) => {

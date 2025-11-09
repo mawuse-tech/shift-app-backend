@@ -125,15 +125,15 @@ export const login = async (req, res, next) => {
         const token = jwt.sign(
             { id: user.user_id, role: user.role },
             process.env.JWT_SECRET,
-            { expiresIn: '1d' }
+            { expiresIn: '30d' }
         );
 
         // send cookie with proper cross-site options
         res.cookie('token', token, {
-            httpOnly: true,
-            maxAge: 30 * 24 * 60 * 60 * 1000,// 30 days
-            secure: true,                // FORCE secure cookies for Netlify + Render
-            sameSite: 'none'             // allow cross-site cookies
+            httpOnly: true,                             // not accessible by JS
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+            secure: process.env.NODE_ENV === 'production', // only HTTPS in production
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'                            // allow cross-site cookies
         });
 
         return res.status(200).json({

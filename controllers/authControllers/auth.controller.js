@@ -192,14 +192,14 @@ export const forgotPassword = async (req, res) => {
     await user.save(); // save hashed token + expiry to DB
 
     // You’ll send `resetToken` to user's email (not the hashed one)
-    const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`;
+    // const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`;
 
     // send reset email logic here...
     sendResetEmail(user.email, resetToken)
 
     res.status(200).json({
         message: "Password reset link sent to your email",
-        resetURL
+        // resetURL
     });
 };
 

@@ -8,7 +8,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
  * {string} workerName - The worker's first name (optional, for personalization)
  */
 export const sendShiftEmail = async (userEmail, workerName) => {
-  const dashboardURL = `http://localhost:5173/workersDash`; 
+  // const dashboardURL = `http://localhost:5173/workersDash`; 
+  const dashboardURL = new URL( "/workersDash", process.env.FRONTEND_URL).toString();
 
   await resend.emails.send({
     from: 'Shift Scheduler <onboarding@resend.dev>',

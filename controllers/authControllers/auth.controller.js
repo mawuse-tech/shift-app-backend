@@ -320,7 +320,7 @@ export const inviteWorker = async (req, res, next) => {
             expiresIn: "1d",
         });
 
-        const verifyLink = `${process.env.FRONTEND_URL}verify?token=${token}`;
+       const verifyLink = new URL(`/verify?token=${token}`, process.env.FRONTEND_URL).toString();;
 
         // Send verification email
         await resend.emails.send({

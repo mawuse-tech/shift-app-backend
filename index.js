@@ -24,7 +24,7 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use(cookieParser());
 
 const allowedOrigins = [
-  'https://shift-app-73ts.onrender.com'
+  'https://shift-app-backend-ke7c.onrender.com'
 ];
 
 app.use(cors({

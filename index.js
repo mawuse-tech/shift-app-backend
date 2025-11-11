@@ -24,11 +24,11 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   // 'http://localhost:5173',          // local dev
-  'https://shift-sch.netlify.app'   // production frontend
+  'https://shift-app-73ts.onrender.com'   // production frontend
 ];
 
 app.use(cors({
-  origin: function(origin, callback) {
+  origin: function (origin, callback) {
     if (!origin) return callback(null, true); // allow non-browser requests
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
@@ -47,8 +47,8 @@ app.use('/api/notice', notificationRoute)
 
 app.use(errorHandler)
 
-sequelize.sync({}).then(()=>{
-    app.listen(PORT, ()=>{
-        console.log(`app listening on port ${PORT}`)
-    })
+sequelize.sync({}).then(() => {
+  app.listen(PORT, () => {
+    console.log(`app listening on port ${PORT}`)
+  })
 })

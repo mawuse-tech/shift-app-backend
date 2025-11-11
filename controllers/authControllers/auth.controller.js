@@ -362,10 +362,10 @@ export const verifyEmail = async (req, res, next) => {
         }
 
         // include the token in the redirect to send to the frontend
-        const redirectUrl = new URL(
-            `/complete-registration?token=${token}&email=${user.email}`,
-            process.env.FRONTEND_URL
-        ).toString();
+        const baseUrl = process.env.FRONTEND_URL?.trim(); // remove accidental spaces
+        if (!baseUrl) throw new Error("FRONTEND_URL is not set properly");
+
+        const redirectUrl = `${baseUrl}/complete-registration?token=${token}&email=${encodeURIComponent(user.email)}`;
 
         return res.json({ redirectUrl });
 

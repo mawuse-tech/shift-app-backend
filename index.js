@@ -8,12 +8,11 @@ import notificationRoute from './route/authRoute/notification.route.js';
 import { errorHandler } from './middleware/errorHandler.middleware.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import path from 'path';
+import path, { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 
-// import associations before routes and sync
-import "./models/modelRelation.model.js"; // ensures User and Shift know each other
+// import associations before routes
+import "./models/modelRelation.model.js";
 import "./models/notificationUserRelation.js";
 
 const PORT = process.env.PORT || 8002;
@@ -25,13 +24,12 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use(cookieParser());
 
 const allowedOrigins = [
-  // 'http://localhost:5173', // local dev
-  'https://shift-app-73ts.onrender.com' // production frontend (if needed)
+  'https://shift-app-73ts.onrender.com'
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // allow non-browser requests
+    if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -60,7 +58,7 @@ app.get(/^(?!\/api).*/, (req, res) => {
 app.use(errorHandler);
 
 // Sync DB and start server
-sequelize.sync({}).then(() => {
+sequelize.sync().then(() => {
   app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
   });

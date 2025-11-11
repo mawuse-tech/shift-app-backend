@@ -45,6 +45,13 @@ app.use('/api/worker', workersRoute)
 app.use('/api/shift', shiftRoute)
 app.use('/api/notice', notificationRoute)
 
+// Serve frontend build
+app.use(express.static(path.join(process.cwd(), 'dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+});
+
+
 app.use(errorHandler)
 
 sequelize.sync({}).then(() => {

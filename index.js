@@ -1,30 +1,32 @@
-import 'dotenv/config'
-import express from 'express'
-import sequelize from './config/db.js'
-import authRoute from './route/authRoute/auth.route.js'
-import workersRoute from './route/authRoute/workers.route.js'
-import shiftRoute from './route/authRoute/shift.route.js'
-import notificationRoute from './route/authRoute/notification.route.js'
-import { errorHandler } from './middleware/errorHandler.middleware.js'
-import cookieParser from 'cookie-parser'
-import cors from 'cors'
-import path from 'path'
+import 'dotenv/config';
+import express from 'express';
+import sequelize from './config/db.js';
+import authRoute from './route/authRoute/auth.route.js';
+import workersRoute from './route/authRoute/workers.route.js';
+import shiftRoute from './route/authRoute/shift.route.js';
+import notificationRoute from './route/authRoute/notification.route.js';
+import { errorHandler } from './middleware/errorHandler.middleware.js';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
 // import associations before routes and sync
-import "./models/modelRelation.model.js"; // this ensures User and Shift knows each other
-import "./models/notificationUserRelation.js"
+import "./models/modelRelation.model.js"; // ensures User and Shift know each other
+import "./models/notificationUserRelation.js";
 
-const PORT = process.env.PORT || 8002
+const PORT = process.env.PORT || 8002;
+const app = express();
 
-const app = express()
-app.use(express.json())
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
-
+// Middleware
+app.use(express.json());
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use(cookieParser());
 
 const allowedOrigins = [
-  // 'http://localhost:5173',          // local dev
-  'https://shift-app-73ts.onrender.com'   // production frontend
+  // 'http://localhost:5173', // local dev
+  'https://shift-app-73ts.onrender.com' // production frontend (if needed)
 ];
 
 app.use(cors({
@@ -39,23 +41,27 @@ app.use(cors({
   credentials: true
 }));
 
+// API Routes
+app.use('/api/auth', authRoute);
+app.use('/api/worker', workersRoute);
+app.use('/api/shift', shiftRoute);
+app.use('/api/notice', notificationRoute);
 
-app.use('/api/auth', authRoute)
-app.use('/api/worker', workersRoute)
-app.use('/api/shift', shiftRoute)
-app.use('/api/notice', notificationRoute)
+// Serve React frontend
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-// Serve frontend build
-app.use(express.static(path.join(process.cwd(), 'dist')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+app.use(express.static(join(__dirname, 'dist')));
+app.get(/^(?!\/api).*/, (req, res) => {
+  res.sendFile(join(__dirname, 'dist', 'index.html'));
 });
 
+// Error handler
+app.use(errorHandler);
 
-app.use(errorHandler)
-
+// Sync DB and start server
 sequelize.sync({}).then(() => {
   app.listen(PORT, () => {
-    console.log(`app listening on port ${PORT}`)
-  })
-})
+    console.log(`App listening on port ${PORT}`);
+  });
+});

@@ -27,6 +27,7 @@ const allowedOrigins = [
   'https://shift-app-backend-ke7c.onrender.com'
 ];
 
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);

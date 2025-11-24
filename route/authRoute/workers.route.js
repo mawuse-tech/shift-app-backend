@@ -6,7 +6,6 @@ import { fileUpload } from "../../config/fileUpload.js";
 const router = Router()
 router.get('/allWorkers', fetchAllWorkers)
 router.delete('/removeWorker/:id', removeWorker)
-router.put('/updateProfile', routeProtect, fileUpload.fields(
-[{name: 'image', maxCount: 1}]), updateProfile)
+router.put('/updateProfile', routeProtect, fileUpload.single('image'), updateProfile)
 
 export default router

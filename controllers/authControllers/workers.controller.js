@@ -29,6 +29,7 @@ export const fetchAllWorkers = async (req, res, next) => {
   }
 };
 
+//remove worker
 export const removeWorker = async (req, res, next) => {
   try {
     const { id } = req.params; // get worker ID from URL
@@ -79,8 +80,8 @@ export const updateProfile = async (req, res, next) => {
     user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
 
     // Handle file uploads
-    if (req.files?.image) {
-      user.image = `uploads/${req.files.image[0].filename}`;
+    if (req.file) {
+      user.image = req.file.path
     }
 
     // Save to DB

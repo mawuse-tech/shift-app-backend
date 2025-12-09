@@ -27,6 +27,7 @@ const allowedOrigins = [
   'https://shift-app-backend-ke7c.onrender.com'
 ];
 
+
 //  app.use(cors({
 //    origin: 'http://localhost:5173',
 //    credentials: true

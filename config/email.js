@@ -5,6 +5,7 @@ export const sendResetEmail = async (userEmail, resetToken) => {
   // const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
   const resetURL = new URL(`/reset-password/${resetToken}`, process.env.FRONTEND_URL).toString();
 
+  
   await resend.emails.send({
    from: 'Shift Scheduler <onboarding@resend.dev>',
     to: userEmail,

@@ -44,7 +44,7 @@ export const completeRegistration = async (req, res, next) => {
     }
 };
 
-
+createAdmin()
     //login function
     // export const login = async (req, res, next) => {
     //     const { email, password } = req.body;

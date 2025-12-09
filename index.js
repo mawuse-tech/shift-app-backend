@@ -24,7 +24,7 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use(cookieParser());
 
 const allowedOrigins = [
-  'https://sched.up.railway.app/'
+  'https://sched.up.railway.app'
 ];
 
 

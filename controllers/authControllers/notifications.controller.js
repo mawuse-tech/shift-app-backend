@@ -14,6 +14,7 @@ export const notifications = async(req, res, next) => {
   }
 } 
 
+
 //delete notifications
 export const deleteNotification = async (req, res, next) => {
   try {

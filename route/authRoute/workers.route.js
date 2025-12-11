@@ -4,7 +4,7 @@ import { routeProtect } from "../../middleware/routeProtect.middleware.js";
 import { fileUpload } from "../../config/fileUpload.js";
 
 const router = Router()
-router.get('/allWorkers', fetchAllWorkers)
+router.get('/allWorkers', routeProtect, fetchAllWorkers)
 router.delete('/removeWorker/:id', removeWorker)
 router.put('/updateProfile', routeProtect, fileUpload.single('image'), updateProfile)
 

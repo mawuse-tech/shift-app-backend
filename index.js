@@ -18,10 +18,10 @@ import "./models/notificationUserRelation.js";
 const PORT = process.env.PORT || 8002;
 const app = express();
 
-// Middleware
-app.use(express.json());
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
-app.use(cookieParser());
+//Middleware
+// app.use(express.json());
+// app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+// app.use(cookieParser());
 
 const allowedOrigins = [
   'https://sched.up.railway.app'
@@ -49,7 +49,8 @@ app.use(cors({
   credentials: true
 }));
 
-// API Routes
+//API Routes
+
 app.use('/api/auth', authRoute);
 app.use('/api/worker', workersRoute);
 app.use('/api/shift', shiftRoute);

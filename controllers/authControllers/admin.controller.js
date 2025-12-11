@@ -1,5 +1,4 @@
 import User from "../../models/users.model.js";
-import bcrypt from "bcryptjs";
 
 //create the admin manually
 export const createAdmin = async () => {

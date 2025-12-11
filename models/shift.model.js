@@ -16,6 +16,15 @@ const Shift = sequelize.define("Shift", {
         },
         onDelete: "CASCADE",
     },
+    
+    assigned_by: {                  
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "Users",    
+      key: "user_id",
+    },
+  },
     day: {
         type: DataTypes.ENUM(
             "Monday",

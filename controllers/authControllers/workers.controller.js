@@ -1,11 +1,19 @@
+import { Op } from "sequelize";
 import User from "../../models/users.model.js";
 import { createAdmin } from "./admin.controller.js";
 
 //fetch all workers
 export const fetchAllWorkers = async (req, res, next) => {
   try {
+     const adminId = req.loggedInUser.user_id; //grab the logged in user who is an admin
     const allWorkers = await User.findAll({
-      where: { role: ["worker", "admin"] },
+     where: {
+    role: ["worker", "admin"],         // include both roles
+    [Op.or]: [
+      { invited_by: adminId },         // workers invited by admin
+      { user_id: adminId }             // the admin herself
+    ]
+  },
       attributes: { 
         exclude: ["password", "passwordResetToken", "passwordResetExpires", "createdAt", "updatedAt"]
       }

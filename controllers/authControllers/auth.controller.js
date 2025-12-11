@@ -152,7 +152,7 @@ export const completeRegistration = async (req, res, next) => {
             next(error);
         }
     };
-
+  
     //logout
     // export const logout = async (req, res, next) => {
     //     try {
@@ -184,7 +184,7 @@ export const completeRegistration = async (req, res, next) => {
         }
     };
 
-    // Forgot password controller
+    //Forgot password controller
     
     export const forgotPassword = async (req, res) => {
         const user = await User.findOne({ where: { email: req.body.email } });
@@ -317,7 +317,8 @@ export const completeRegistration = async (req, res, next) => {
                 firstName,
                 lastName,
                 role,
-                isVerified: false
+                isVerified: false,
+                invited_by: req.loggedInUser.user_id
             });
 
             // Create JWT verification token

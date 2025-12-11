@@ -12,7 +12,7 @@ router.post('/complete-register', fileUpload.single('image'), completeRegistrati
 router.post('/login', login);
 router.post('/logout', logout)
 router.post('/forgotPassword', forgotPassword)
-router.post('/resetPassword/:token', resetPassword)
+router.post('/resetPassword/:token', routeProtect, resetPassword)
 router.post('/changePassword', routeProtect, changePassword)
 router.get('/userData', routeProtect, loggedInUserData)
 

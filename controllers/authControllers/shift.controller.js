@@ -66,12 +66,17 @@ export const createShift = async (req, res, next) => {
 //fetch all shifts
 export const fetchAllShifts = async (req, res, next) => {
   try {
+    const adminId = req.loggedInUser.role === "admin"
+      ? req.loggedInUser.user_id
+      : req.loggedInUser.invited_by;
+
     const usersWithShifts = await User.findAll({
       attributes: ["user_id", "firstName", "lastName", "email", "phoneNumber"], // only needed fields from the user's model
       include: [
         {
           model: Shift,
           as: "shifts", // must match your association alias
+          where: { assigned_by: adminId }, // only shifts assigned by this admin
           attributes: ["shift_id", "day", "shift_type", "date"],
         },
       ],

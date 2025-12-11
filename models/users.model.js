@@ -10,6 +10,15 @@ const User = sequelize.define("User", {
     autoIncrement: true,
   },
 
+   invited_by: {                  
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: "Users",    // admins are also users
+      key: "user_id",
+    },
+  },
+
   firstName: {
     type: DataTypes.STRING,
     allowNull: true,

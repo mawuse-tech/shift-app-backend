@@ -6,10 +6,10 @@ import { createShift, deleteShift, editShift, fetchAllShifts, getMyShifts, getWo
 const router = Router()
 
 router.post('/', routeProtect, adminOnly, createShift)
-router.get('/allShifts', fetchAllShifts)
-router.delete('/deleteShift/:id', deleteShift)
-router.put('/editShift/:shift_id', editShift)
+router.get('/allShifts', routeProtect, fetchAllShifts)
+router.delete('/deleteShift/:id', routeProtect, deleteShift)
+router.put('/editShift/:shift_id', routeProtect, editShift)
 router.get('/myShift', routeProtect, getMyShifts)
-router.get("/history/:workerId", getWorkerShiftHistory);
+router.get("/history/:workerId", routeProtect, getWorkerShiftHistory);
 
 export default router

@@ -68,7 +68,7 @@ app.get(/^(?!\/api).*/, (req, res) => {
 app.use(errorHandler);
 
 // Sync DB and start server
-sequelize.sync({force:true}).then(() => {
+sequelize.sync({alter:true}).then(() => {
   app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
   });

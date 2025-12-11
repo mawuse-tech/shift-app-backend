@@ -50,7 +50,6 @@ app.use(cors({
 }));
 
 //API Routes
-
 app.use('/api/auth', authRoute);
 app.use('/api/worker', workersRoute);
 app.use('/api/shift', shiftRoute);

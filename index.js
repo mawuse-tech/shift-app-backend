@@ -19,9 +19,9 @@ const PORT = process.env.PORT;
 const app = express();
 
 //Middleware
-// app.use(express.json());
+  app.use(express.json());
 // app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
-// app.use(cookieParser());
+  app.use(cookieParser());
 
 const allowedOrigins = [
   'https://sche.up.railway.app'

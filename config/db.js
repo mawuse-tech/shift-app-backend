@@ -22,6 +22,7 @@ export default sequelize;
 
 
 
+
 // const sequelize = new Sequelize(
 //   process.env.DB_NAME,     // EmployeeData
 //   process.env.DB_USER,     // postgres

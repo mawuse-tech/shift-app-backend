@@ -24,7 +24,7 @@ const app = express();
 // app.use(cookieParser());
 
 const allowedOrigins = [
-  'https://sched.up.railway.app'
+  'https://sche.up.railway.app'
 ];
 
 

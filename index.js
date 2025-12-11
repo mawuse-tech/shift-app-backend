@@ -15,7 +15,7 @@ import { fileURLToPath } from 'url';
 import "./models/modelRelation.model.js";
 import "./models/notificationUserRelation.js";
 
-const PORT = process.env.PORT || 8002;
+const PORT = process.env.PORT;
 const app = express();
 
 //Middleware

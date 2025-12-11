@@ -5,7 +5,6 @@ import crypto from 'crypto'
 import { Op } from "sequelize";
 import bcrypt from "bcryptjs";
 import { Resend } from "resend";
-import { createAdmin } from "./admin.controller.js";
 
 //registration function
 export const completeRegistration = async (req, res, next) => {
@@ -45,113 +44,113 @@ export const completeRegistration = async (req, res, next) => {
 };
 
     //login function
-    // export const login = async (req, res, next) => {
-    //     const { email, password } = req.body;
-
-    //     if (!email) {
-    //         const error = new Error("email is required")
-    //         error.statusCode = 400
-    //         return next(error)
-    //     }
-    //     if (!password) {
-    //         const error = new Error("Password is required")
-    //         error.statusCode = 400
-    //         return next(error)
-    //     }
-
-    //     try {
-    //         const user = await User.findOne({ where: { email } })
-
-    //         if (!user) {
-    //             // User not found
-    //             return res.status(401).json({ message: "Email or password is wrong" });
-    //         }
-
-    //         if (user.role !== "admin" && !user.isVerified) {
-    //             return res.status(401).json({ message: "Please verify your email first." });
-    //         }
-
-    //         if (!user) {
-    //             const error = new Error("Email or password is wrong")
-    //             error.statusCode = 401
-    //             return next(error)
-    //         }
-
-    //         const isMatch = await user.comparePassword(password)
-    //         if (!isMatch) {
-    //             const error = new Error('incorect email or password')
-    //             error.statusCode = 401
-    //             return next(error)
-    //         };
-
-    //         const token = jwt.sign({ id: user.user_id, role: user.role }, process.env.JWT_SECRET, {
-    //             expiresIn: '1d'
-    //         });
-
-
-    //         res.cookie('token', token, {
-    //             httpOnly: true, //avoid client side tempering
-    //             maxAge: 24 * 60 * 60 * 1000 //1 day
-    //         })
-
-    //         return res.status(200).json({
-    //             success: true,
-    //             statusCode: 200,
-    //             message: "user logged in successfuly",
-    //             role: user.role
-    //         })
-
-
-    //     } catch (error) {
-    //         next(error)
-    //     }
-    // };
-
     export const login = async (req, res, next) => {
         const { email, password } = req.body;
 
-        if (!email) return next(Object.assign(new Error("Email is required"), { statusCode: 400 }));
-        if (!password) return next(Object.assign(new Error("Password is required"), { statusCode: 400 }));
+        if (!email) {
+            const error = new Error("email is required")
+            error.statusCode = 400
+            return next(error)
+        }
+        if (!password) {
+            const error = new Error("Password is required")
+            error.statusCode = 400
+            return next(error)
+        }
 
         try {
-            const user = await User.findOne({ where: { email } });
+            const user = await User.findOne({ where: { email } })
 
-            if (!user) return res.status(401).json({ message: "Email or password is wrong" });
+            if (!user) {
+                // User not found
+                return res.status(401).json({ message: "Email or password is wrong" });
+            }
 
             if (user.role !== "admin" && !user.isVerified) {
                 return res.status(401).json({ message: "Please verify your email first." });
             }
 
-            const isMatch = await user.comparePassword(password);
-            if (!isMatch) return next(Object.assign(new Error("Incorrect email or password"), { statusCode: 401 }));
+            if (!user) {
+                const error = new Error("Email or password is wrong")
+                error.statusCode = 401
+                return next(error)
+            }
 
-            // create JWT
-            const token = jwt.sign(
-                { id: user.user_id, role: user.role },
-                process.env.JWT_SECRET,
-                { expiresIn: '30d' }
-            );
+            const isMatch = await user.comparePassword(password)
+            if (!isMatch) {
+                const error = new Error('incorect email or password')
+                error.statusCode = 401
+                return next(error)
+            };
 
-            // send cookie with proper cross-site options
-            res.cookie('token', token, {
-                httpOnly: true,
-                maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-                secure: true, // force HTTPS (Render + Netlify)
-                sameSite: 'none', // cross-site required
-                path: '/' // ensure cookie applies to all routes 
+            const token = jwt.sign({ id: user.user_id, role: user.role }, process.env.JWT_SECRET, {
+                expiresIn: '1d'
             });
+
+
+            res.cookie('token', token, {
+                httpOnly: true, //avoid client side tempering
+                maxAge: 24 * 60 * 60 * 1000 //1 day
+            })
 
             return res.status(200).json({
                 success: true,
                 statusCode: 200,
-                message: "User logged in successfully",
+                message: "user logged in successfuly",
                 role: user.role
-            });
+            })
+
 
         } catch (error) {
-            next(error);
+            next(error)
         }
     };
+
+    // export const login = async (req, res, next) => {
+    //     const { email, password } = req.body;
+
+    //     if (!email) return next(Object.assign(new Error("Email is required"), { statusCode: 400 }));
+    //     if (!password) return next(Object.assign(new Error("Password is required"), { statusCode: 400 }));
+
+    //     try {
+    //         const user = await User.findOne({ where: { email } });
+
+    //         if (!user) return res.status(401).json({ message: "Email or password is wrong" });
+
+    //         if (user.role !== "admin" && !user.isVerified) {
+    //             return res.status(401).json({ message: "Please verify your email first." });
+    //         }
+
+    //         const isMatch = await user.comparePassword(password);
+    //         if (!isMatch) return next(Object.assign(new Error("Incorrect email or password"), { statusCode: 401 }));
+
+    //         // create JWT
+    //         const token = jwt.sign(
+    //             { id: user.user_id, role: user.role },
+    //             process.env.JWT_SECRET,
+    //             { expiresIn: '30d' }
+    //         );
+
+    //         // send cookie with proper cross-site options
+    //         res.cookie('token', token, {
+    //             httpOnly: true,
+    //             maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    //             secure: true, // force HTTPS (Render + Netlify)
+    //             sameSite: 'none', // cross-site required
+    //             path: '/' // ensure cookie applies to all routes 
+    //         });
+
+    //         return res.status(200).json({
+    //             success: true,
+    //             statusCode: 200,
+    //             message: "User logged in successfully",
+    //             role: user.role
+    //         });
+
+    //     } catch (error) {
+    //         next(error);
+    //     }
+    // };
   
     //logout
     // export const logout = async (req, res, next) => {

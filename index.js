@@ -14,7 +14,6 @@ import { fileURLToPath } from 'url';
 // import associations before routes
 import "./models/modelRelation.model.js";
 import "./models/notificationUserRelation.js";
-import { createAdmin } from './controllers/authControllers/admin.controller.js';
 
 const PORT = process.env.PORT;
 const app = express();
@@ -69,14 +68,9 @@ app.get(/^(?!\/api).*/, (req, res) => {
 app.use(errorHandler);
 
 // Sync DB and start server
-sequelize.sync({ force: true }).then(async () => {
-  console.log("Database synced and recreated");
-
-  // Create initial admin safely
-  await createAdmin(); 
-
+sequelize.sync().then(() => {
   app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
   });
 });
-
+ 

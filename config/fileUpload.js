@@ -28,6 +28,7 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 // export const fileUpload = multer({storage, fileFilter})
 
+
 const storage = new CloudinaryStorage({cloudinary,
   params: {
     folder: "shift_assets",

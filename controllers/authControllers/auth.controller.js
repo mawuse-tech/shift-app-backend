@@ -145,7 +145,7 @@ export const completeRegistration = async (req, res, next) => {
                 statusCode: 200,
                 message: "User logged in successfully",
                 role: user.role,
-                token
+                token: token
             });
 
         } catch (error) {

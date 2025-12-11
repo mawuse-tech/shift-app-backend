@@ -165,6 +165,7 @@ export const completeRegistration = async (req, res, next) => {
     //         next(error)
     //     }
     // };
+    
     export const logout = async (req, res, next) => {
         try {
             res.clearCookie('token', {

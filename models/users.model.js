@@ -14,7 +14,7 @@ const User = sequelize.define("User", {
     type: DataTypes.INTEGER,
     allowNull: true,
     references: {
-      model: "Users",    // admins are also users
+      model: "User",    // admins are also users
       key: "user_id",
     },
   },

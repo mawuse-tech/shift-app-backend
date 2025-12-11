@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
+import User from "./users.model.js";
 
 const Shift = sequelize.define("Shift", {
     shift_id: {
@@ -11,7 +12,7 @@ const Shift = sequelize.define("Shift", {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: "Users",
+            model: User,
             key: "user_id",
         },
         onDelete: "CASCADE",

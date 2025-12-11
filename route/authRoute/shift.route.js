@@ -7,9 +7,9 @@ const router = Router()
 
 router.post('/', routeProtect, adminOnly, createShift)
 router.get('/allShifts', routeProtect, fetchAllShifts)
-router.delete('/deleteShift/:id', routeProtect, deleteShift)
-router.put('/editShift/:shift_id', routeProtect, editShift)
+router.delete('/deleteShift/:id', deleteShift)
+router.put('/editShift/:shift_id', editShift)
 router.get('/myShift', routeProtect, getMyShifts)
-router.get("/history/:workerId", routeProtect, getWorkerShiftHistory);
+router.get("/history/:workerId", getWorkerShiftHistory);
 
 export default router

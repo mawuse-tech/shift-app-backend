@@ -369,6 +369,7 @@ export const completeRegistration = async (req, res, next) => {
 
             // include the token in the redirect to send to the frontend
             const baseUrl = process.env.LIVE_FRONTEND_URL?.trim(); // remove accidental spaces
+            console.log('hello',process.env.LIVE_FRONTEND_URL)
 
             if (!baseUrl) throw new Error("FRONTEND_URL is not set properly");
 

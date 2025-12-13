@@ -3,7 +3,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendResetEmail = async (userEmail, resetToken) => {
   // const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
-  const resetURL = new URL(`/reset-password/${resetToken}`, process.env.LIVE_FONTEND_URL).toString();
+  const resetURL = new URL(`/reset-password/${resetToken}`, process.env.LIVE_FRONTEND_URL).toString();
 
   
   await resend.emails.send({

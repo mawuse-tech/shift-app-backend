@@ -27,6 +27,8 @@ const allowedOrigins = [
   'https://sche.up.railway.app'
 ];
 
+console.log("LIVE_FRONTEND_URL:", process.env.LIVE_FRONTEND_URL);
+
 
 //  app.use(cors({
 //    origin: 'http://localhost:5173',

@@ -303,7 +303,8 @@ export const completeRegistration = async (req, res, next) => {
     const resend = new Resend(process.env.RESEND_API_KEY);
     export const inviteWorker = async (req, res, next) => {
         try {
-            const { email, firstName, lastName, role } = req.body;
+            const { email, firstName, lastName} = req.body;
+            const role = "worker";
 
             // Check if email already exists
             const existingUser = await User.findOne({ where: { email } });
@@ -340,8 +341,7 @@ export const completeRegistration = async (req, res, next) => {
                 <p>Click below to verify your email and finish setting up your account:</p>
                 <a href="${verifyLink}" style="color:#7C3AED;">Verify Account</a>
                 <br/><br/>
-                <small>This link expires in an hour time.</small>
-            `,
+               <small>This link expires in 1 day.</small>`,
             });
 
             return res.status(200).json({ message: "Invitation email sent " });

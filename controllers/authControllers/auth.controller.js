@@ -334,7 +334,7 @@ export const completeRegistration = async (req, res, next) => {
             await resend.emails.send({
                 from: "Shift Sheduler <onboarding@resend.dev>",
                 to: email,
-                subject: "Complete Your Account Setup",
+                subject: `${req.loggedInUser.firstName} invited you to Shift Scheduler`,
                 html: `
                 <p>Hello ${firstName || ""},</p>
                 <p>You have been invited to join the Shift Platform.</p>

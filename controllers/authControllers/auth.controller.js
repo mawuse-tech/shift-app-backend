@@ -369,6 +369,8 @@ export const completeRegistration = async (req, res, next) => {
 
             // include the token in the redirect to send to the frontend
             const baseUrl = process.env.FRONTEND_URL?.trim(); // remove accidental spaces
+            console.log("FRONTEND_URL currently in process.env:", process.env.FRONTEND_URL);
+
             if (!baseUrl) throw new Error("FRONTEND_URL is not set properly");
 
             const redirectUrl = `${baseUrl}/complete-registration?token=${token}&email=${encodeURIComponent(user.email)}`;

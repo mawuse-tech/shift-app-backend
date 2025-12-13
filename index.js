@@ -15,6 +15,8 @@ import { fileURLToPath } from 'url';
 import "./models/modelRelation.model.js";
 import "./models/notificationUserRelation.js";
 
+console.log("LIVE_FRONTEND_URL:", process.env.LIVE_FRONTEND_URL);
+
 const PORT = process.env.PORT;
 const app = express();
 
@@ -26,9 +28,6 @@ const app = express();
 const allowedOrigins = [
   'https://sche.up.railway.app'
 ];
-
-console.log("LIVE_FRONTEND_URL:", process.env.LIVE_FRONTEND_URL);
-
 
 //  app.use(cors({
 //    origin: 'http://localhost:5173',

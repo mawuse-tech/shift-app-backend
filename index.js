@@ -15,6 +15,7 @@ import { fileURLToPath } from 'url';
 import "./models/modelRelation.model.js";
 import "./models/notificationUserRelation.js";
 
+
 console.log("LIVE_FRONTEND_URL:", process.env.LIVE_FRONTEND_URL);
 
 const PORT = process.env.PORT;

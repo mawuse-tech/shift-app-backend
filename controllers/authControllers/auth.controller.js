@@ -328,7 +328,7 @@ export const completeRegistration = async (req, res, next) => {
             });
 
             // const verifyLink = `${process.env.FRONTEND_URL}/verify?token=${token}`;
-            const verifyLink = new URL(`/verify?token=${token}`, process.env.FRONTEND_URL).toString();
+            const verifyLink = new URL(`/verify?token=${token}`, process.env.LIVE_FONTEND_URL).toString();
 
             // Send verification email
             await resend.emails.send({
@@ -368,8 +368,7 @@ export const completeRegistration = async (req, res, next) => {
             }
 
             // include the token in the redirect to send to the frontend
-            const baseUrl = process.env.FRONTEND_URL?.trim(); // remove accidental spaces
-            console.log("FRONTEND_URL currently in process.env:", process.env.FRONTEND_URL);
+            const baseUrl = process.env.LIVE_FONTEND_URL?.trim(); // remove accidental spaces
 
             if (!baseUrl) throw new Error("FRONTEND_URL is not set properly");
 
